@@ -1,0 +1,17 @@
+image: php
+
+variables:
+  BARANCH: dev
+  SUFFIX: php
+  MODULE: 
+  JOB_URL: ''
+  GIT_URL: ''
+  DD_NOTICE_URL: ''
+
+stages:
+  - check
+
+check_syntax:
+  stage: check
+  script:
+    - bash .rider/init.sh
