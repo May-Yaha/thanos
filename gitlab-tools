@@ -1,0 +1,145 @@
+#!/bin/bash
+
+path=~
+
+gitlab_ci_tmp='gitlab-ci.yml'
+# mv rider/ ../.rider
+# mv gitlab-ci.yml .gitlab-ci.yml
+
+# rm -rf php_rider/
+
+
+# 1、介绍git hooks
+# 2、选择对应的操作
+# 3、输入项目路径
+# 4、cp对应文件
+
+# 概述
+summary(){
+	echo "
++-----------------------+
+|   GitLab代码检测工具   |
++-----------------------+
+"
+
+# echo "使用方法:
+#   	deploy [options] [arguments]
+
+# Options:
+# 	-p，需要接入git hooks的项目路径
+# "
+}
+
+# 检查项目是否存在
+choose_path(){
+	read -p "请输入项目本地绝对路径:" -e path
+	if [[ ! -d ${path} ]]; then
+		echo -e "\033[31m没有发现项目路径 \033[0m"
+		exit 1
+	fi
+}
+
+# 填写php镜像
+php_images(){
+	read -p "请输入需要拉取的PHP镜像名（必填）:" -e php_images
+	if [[ ! ${php_images} ]]; then
+		echo -e "\033[31m镜像名必填 \033[0m"
+		exit 2
+	fi
+	echo "image: ${php_images}" > ${gitlab_ci_tmp}
+}
+
+# 填写基础配置
+optional_config(){
+	echo "variables:" >> ${gitlab_ci_tmp}
+
+	# 分支选择
+	read -p "请输入需要比对的分支，默认dev:" -e baranch
+
+	if [[ ! ${baranch} ]]; 
+		then
+			echo "  BARANCH: dev" >> ${gitlab_ci_tmp}
+		else
+			echo "  BARANCH: ${baranch}" >> ${gitlab_ci_tmp}
+	fi
+
+	# 后缀名选择
+	read -p "需要检查文件的后缀名，默认只检查php:" -e suffix
+	if [[ ! ${suffix} ]]; 
+		then
+			echo "  SUFFIX: php" >> ${gitlab_ci_tmp}
+		else
+			echo "  SUFFIX: ${suffix}" >> ${gitlab_ci_tmp}
+	fi
+
+	# 项目模块名
+	read -p "项目模块名（必填）:" -e module
+	if [[ ! ${module} ]]; then
+		echo -e "\033[31m模块名必填 \033[0m"
+		exit 3
+	fi
+	echo "  MODULE: ${module}" >> ${gitlab_ci_tmp}
+
+
+	# Git 地址
+	read -p "项目GIT URL（必填）:" -e git_url
+	if [[ ! ${git_url} ]]; then
+		echo -e "\033[31m项目GIT URL必填 \033[0m"
+		exit 4
+	fi
+	echo "  GIT_URL: '${git_url}'" >> ${gitlab_ci_tmp}
+
+	# Git Job 地址
+	read -p "项目JOB URL（必填）:" -e job_ci_url
+	if [[ ! ${job_ci_url} ]]; then
+		echo -e "\033[31m项目JOB URL必填 \033[0m"
+		exit 5
+	fi
+	echo "  JOB_URL: '${job_ci_url}'" >> ${gitlab_ci_tmp}
+
+	# 钉钉机器人通知URL
+	read -p "钉钉机器人通知URL:" -e dd_url
+	if [[ ${dd_url} ]]; then
+		echo "  DD_NOTICE_URL: '${dd_url}'" >> ${gitlab_ci_tmp}	
+	fi
+
+}
+
+# 基础ci配置
+base_config(){
+	cat>>${gitlab_ci_tmp}<<EOF
+stages:
+  - check
+check_syntax:
+  stage: check
+  script:
+    - bash .rider/init.sh
+EOF
+}
+
+
+build_rider(){
+	echo -e "\033[32m添加的项目路径为：${path} \033[0m"
+
+	cp -r ${bash_path}/rider ${path}/.rider
+	cp -r ${bash_path}/gitlab-ci.yml ${path}/.gitlab-ci.yml
+	rm -rf ${gitlab_ci_tmp}
+
+	echo "添加完成！"
+}
+
+# 当前项目的基本路径
+bash_path=$(cd `dirname $0`; pwd)
+
+summary
+
+php_images
+optional_config
+base_config
+
+echo -e "\033[32m生成配置文件如下： \033[0m \n"
+cat ${gitlab_ci_tmp}
+echo -e "\n\033[33m是否继续操作，或按 CTRL+C 结束执行...\033[0m"
+
+choose_path
+build_rider
