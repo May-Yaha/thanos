@@ -25,19 +25,15 @@ check_php_debug(){
 
 skip_ignore_file(){
 
-	error_no=0
+    error_no=0
 
-	skip_file=`grep -o "${file}" .rider/fileignore`
-
-    if [[ "${skip_file}" ]]; then
-    	echo -e "\033[33m 忽略检查文件：${file} \033[0m"
-    	error_no=4
-    fi
-
-    if [[ ! "${file}" =~ (\.php$) ]]; then
-    	echo -e "\033[33m 忽略非PHP文件：${file} \033[0m"
-    	error_no=5
-    fi
+    for patten in `cat .rider/fileignore`
+    do
+        if [[ ${file} =~ (${patten}*) ]]; then
+            echo -e "\033[33m 忽略检查文件：${file} \033[0m"
+            error_no=4
+        fi
+    done
 }
 
 
