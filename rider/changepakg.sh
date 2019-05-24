@@ -29,7 +29,7 @@ skip_ignore_file(){
     do
         if [[ ${file} =~ (${patten}*) ]]; then
             echo -e "\033[33m 忽略检查文件：${file} \033[0m"
-            error_no=4
+            ignore_flag=1
         fi
     done
 }
@@ -45,9 +45,9 @@ main(){
 
 	    skip_ignore_file
 
-	    if [[ ${error_no} -eq 4 ]]
+	    if [[ ${ignore_flag} -eq 1 ]]
 	    then
-	    	error_no=0
+	        ignore_flag=0
 	        continue
 	    fi
 
