@@ -120,6 +120,10 @@ EOF
 
 build_rider(){
 	echo -e "\033[32m添加的项目路径为：${path} \033[0m"
+	
+	if [[ -d "${path}/.rider" ]] ; then
+		rm -rf ${path}/.rider
+	fi
 
 	cp -r ${bash_path}/rider ${path}/.rider
 	cp -r ${bash_path}/gitlab-ci.yml ${path}/.gitlab-ci.yml
