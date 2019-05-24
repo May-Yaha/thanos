@@ -13,7 +13,9 @@ if [[ ! -n ${files} ]]; then
     exit ${error_no}
 fi
 
-push_notice
+if [[ ${DD_NOTICE_URL} ]]; then
+    push_notice
+fi
 
 error_no=${?}
 

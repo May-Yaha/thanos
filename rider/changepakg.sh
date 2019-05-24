@@ -25,8 +25,6 @@ check_php_debug(){
 
 skip_ignore_file(){
 
-    error_no=0
-
     for patten in `cat .rider/fileignore`
     do
         if [[ ${file} =~ (${patten}*) ]]; then
@@ -47,8 +45,9 @@ main(){
 
 	    skip_ignore_file
 
-	    if [[ ${error_no} -eq 4 || ${error_no} -eq 5 ]]
+	    if [[ ${error_no} -eq 4 ]]
 	    then
+	    	error_no=0
 	        continue
 	    fi
 
