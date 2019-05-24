@@ -23,6 +23,18 @@ check_php_debug(){
     fi
 }
 
+# sql检查
+check_sql(){
+	sql=$(grep -Ewrni 'select|insert|update|delete' ${file}|grep -v '//')
+
+	if [[ ${sql} ]]
+    then
+	    echo -e "\033[31m 存在直接拼写SQL，请先修改以下代码：${file} -- ${php_debug} \033[0m"
+        error_no=4
+    fi
+}
+
+# 屏蔽文件
 skip_ignore_file(){
 
     for patten in `cat .rider/fileignore`
@@ -54,6 +66,8 @@ main(){
 	    check_php_debug
 
 	    check_php_syntax
+
+	    check_sql
 	done
 
 	exit ${error_no}
