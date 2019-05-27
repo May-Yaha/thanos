@@ -1,11 +1,12 @@
 #!/bin/bash
 
 error_no=0
+project_name='thanos'
 
-source .rider/massage.sh
+source .${project_name}/massage.sh
 
 # 获取修改的文件
-files=`.rider/changefiles.sh`
+files=`.${project_name}/changefiles.sh`
 
 # 没有文件修改时进行的操作
 if [[ ! -n ${files} ]]; then
@@ -20,7 +21,7 @@ fi
 error_no=${?}
 
 if [[ ${error_no} -ne 0  ]]; then
-    .rider/changefiles.sh
+    .${project_name}/changefiles.sh
     exit ${error_no}
 fi
 
@@ -30,7 +31,7 @@ echo -e '\033[32m ************************************* \033[0m\n'
 
 
 # 开始检查
-.rider/changepakg.sh ${files}
+.${project_name}/changepakg.sh ${files}
 
 error_no=${?}
 
