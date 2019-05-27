@@ -3,11 +3,6 @@
 path=~
 
 gitlab_ci_tmp='gitlab-ci.yml'
-# mv rider/ ../.rider
-# mv gitlab-ci.yml .gitlab-ci.yml
-
-# rm -rf php_rider/
-
 
 # 1、介绍git hooks
 # 2、选择对应的操作
@@ -110,19 +105,19 @@ stages:
 check_syntax:
   stage: check
   script:
-    - bash .rider/init.sh
+    - bash .thanos/init.sh
 EOF
 }
 
 
-build_rider(){
+build_thanos(){
 	echo -e "\033[32m添加的项目路径为：${path} \033[0m"
 	
-	if [[ -d "${path}/.rider" ]] ; then
-		rm -rf ${path}/.rider
+	if [[ -d "${path}/.thanos" ]] ; then
+		rm -rf ${path}/.thanos
 	fi
 
-	cp -r ${bash_path}/rider ${path}/.rider
+	cp -r ${bash_path}/thanos ${path}/.thanos
 	cp -r ${bash_path}/gitlab-ci.yml ${path}/.gitlab-ci.yml
 	rm -rf ${gitlab_ci_tmp}
 
@@ -143,4 +138,4 @@ cat ${gitlab_ci_tmp}
 echo -e "\n\033[33m是否继续操作，或按 CTRL+C 结束执行...\033[0m"
 
 choose_path
-build_rider
+build_thanos
