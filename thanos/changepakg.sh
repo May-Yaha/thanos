@@ -11,7 +11,7 @@ check_php_syntax(){
         error_no=2
     fi
 }
-	
+
 # 断点检查
 check_php_debug(){
 
@@ -29,7 +29,7 @@ check_sql(){
 
 	if [[ ${sql} ]]
     then
-	    echo -e "\033[31m 存在直接拼写SQL，请先修改以下代码：${file} -- ${php_debug} \033[0m"
+	    echo -e "\033[31m 存在直接拼写SQL，请先修改以下代码：${file} -- ${sql} \033[0m"
         error_no=4
     fi
 }
@@ -37,7 +37,7 @@ check_sql(){
 # 屏蔽文件
 skip_ignore_file(){
 
-    for patten in `cat .rider/fileignore`
+    for patten in `cat .thanos/fileignore`
     do
         if [[ ${file} =~ (${patten}*) ]]; then
             echo -e "\033[33m 忽略检查文件：${file} \033[0m"
