@@ -82,20 +82,17 @@ optional_config(){
 
 
 	# Git 地址
-	read -p "项目GIT URL（必填）:" -e git_url
-	if [[ ! ${git_url} ]]; then
-		echo -e "\033[31m项目GIT URL必填 \033[0m"
-		exit 4
+	read -p "项目GIT URL（选填）:" -e git_url
+	if [[ ${git_url} ]]; then
+		echo "  GIT_URL: '${git_url}'" >> ${gitlab_ci_tmp}
 	fi
-	echo "  GIT_URL: '${git_url}'" >> ${gitlab_ci_tmp}
 
 	# Git Job 地址
-	read -p "项目JOB URL（必填）:" -e job_ci_url
-	if [[ ! ${job_ci_url} ]]; then
-		echo -e "\033[31m项目JOB URL必填 \033[0m"
-		exit 5
+	read -p "项目JOB URL（选填）:" -e job_ci_url
+	if [[ ${job_ci_url} ]]; then
+		echo "  JOB_URL: '${job_ci_url}'" >> ${gitlab_ci_tmp}
 	fi
-	echo "  JOB_URL: '${job_ci_url}'" >> ${gitlab_ci_tmp}
+	
 
 	# 钉钉机器人通知URL
 	read -p "钉钉机器人通知URL:" -e dd_url
