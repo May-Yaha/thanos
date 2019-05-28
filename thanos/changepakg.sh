@@ -11,11 +11,11 @@ check_php_syntax(){
         error_no=2
     fi
 }
-
+	
 # 断点检查
 check_php_debug(){
 
-	php_debug=$(grep -Ewrni 'die|exit' ${file}|grep -v '//')
+	php_debug=$(grep -Ewrni '(die|exit)[(]' ${file}|grep -v '//')
     if [[ ${php_debug} ]]
     then
 	    echo -e "\033[31m 存在调试断点，请先修改以下代码：${file} -- ${php_debug} \033[0m"
@@ -25,7 +25,7 @@ check_php_debug(){
 
 # sql检查
 check_sql(){
-	sql=$(grep -Ewrni 'select|insert|update|delete' ${file}|grep -v '//')
+	sql=$(grep -Ewrni "[\"'](select|delete|update|insert) " ${file}|grep -v '//')
 
 	if [[ ${sql} ]]
     then
